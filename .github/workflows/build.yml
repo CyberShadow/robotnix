@@ -1,0 +1,19 @@
+name: Build ROM
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+        - device: crosshatch
+          flavor: vanilla
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2.3.5
+    - uses: cachix/install-nix-action@v26
+    - run: |
+        nix-build --arg configuration '{ device="${{ matrix.device }}"; flavor="${{ matrix.flavor }}"; }' -A img
